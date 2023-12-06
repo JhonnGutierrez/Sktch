@@ -1,0 +1,48 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "https://marketplace.visualstudio.com/items?itemName=pomdtr.excalidraw-editor",
+  "elements": [
+    {
+      "type": "text",
+      "version": 77,
+      "versionNonce": 1725900705,
+      "isDeleted": false,
+      "id": "aBwU1Wq43I-SA-gzDJzcV",
+      "fillStyle": "hachure",
+      "strokeWidth": 1,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "angle": 0,
+      "x": 143.00003051757812,
+      "y": -37.200009155273435,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "width": 492.1875,
+      "height": 33.6,
+      "seed": 1334263919,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "boundElements": null,
+      "updated": 1701188294097,
+      "link": null,
+      "locked": false,
+      "fontSize": 28,
+      "fontFamily": 3,
+      "text": "SktchTales: Digital Sketchbook",
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "SktchTales: Digital Sketchbook",
+      "lineHeight": 1.2,
+      "baseline": 27
+    }
+  ],
+  "appState": {
+    "gridSize": null,
+    "viewBackgroundColor": "#ffffff"
+  },
+  "files": {}
+}
