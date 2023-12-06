@@ -66,6 +66,7 @@ const TextKonva = ({ text, onChange }: Props) => {
         fontFamily={text.fontFamily}
         draggable={true}
         wrap="none"
+        // fill="#f00"
         opacity={isSelected ? 0 : 1}
         onDblClick={() => {
           onSelect();
@@ -141,14 +142,8 @@ const TextKonva = ({ text, onChange }: Props) => {
               shapeNode={shapeRef.current}
               scale={canvasScale}
               removeTextarea={() => clearSelected()}
-              onEnd={(value, sizes) =>
-                onChange({
-                  ...text,
-                  content: value,
-                  width: sizes[0],
-                  height: sizes[1],
-                })
-              }
+              onChange={onChange}
+              text={text}
             />,
             containerRef.current,
           )}

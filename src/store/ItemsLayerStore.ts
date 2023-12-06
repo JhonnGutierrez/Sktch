@@ -38,8 +38,6 @@ export const useItemsLayerStore = create<ItemsLayerStore>()((set) => ({
         !(JSON.stringify(history[historyStep]) == JSON.stringify(itemsCopy))
       ) {
         history = history.concat([itemsCopy]);
-        // console.log(historyStep);
-        // console.log(history);
         historyStep += 1;
       }
 

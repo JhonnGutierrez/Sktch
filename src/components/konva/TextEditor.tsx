@@ -1,4 +1,5 @@
 import { OnResizeEvent, useResizeObserver } from "@/hooks/useResizeObserver";
+import { TextItem } from "@/types/storeTypes";
 import Konva from "konva";
 import { useEffect, useRef, useState } from "react";
 
@@ -9,7 +10,8 @@ type Props = {
     y: number;
   };
   scale: [number, number];
-  onEnd: (value: string, sizes: [number, number]) => void;
+  text: TextItem;
+  onChange: (newAttrs: TextItem) => void;
   removeTextarea: () => void;
 };
 
@@ -18,19 +20,18 @@ const TextEditor = ({
   areaPosition,
   scale,
   removeTextarea,
-  onEnd,
+  onChange,
+  text,
 }: Props) => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const textarea = textAreaRef.current;
+
   const [transform, setTransform] = useState("");
   const [value, setValue] = useState(shapeNode.text());
-  const [textareaheight, setTextareaheight] = useState(1);
+  const [textareaRows, setTextareaRows] = useState(1);
+
   let size: [number, number] = [shapeNode.width(), shapeNode.height()];
-  // const [sizeState, setSizeState] = useState(size);
-  const getSize = () => {
-    console.log("size", size);
-    return size;
-  };
+
+  const textarea = textAreaRef.current;
 
   useEffect(() => {
     // Apply node rotation
@@ -51,24 +52,29 @@ const TextEditor = ({
     setTransform((state) => (state += `translateY(-${px}px)`));
 
     const rows = (value.match(/\n/g) || []).length + 1 || 1;
-    setTextareaheight(rows);
+    setTextareaRows(rows);
   }, []);
 
   useEffect(() => {
     return () => {
-      console.log(value, getSize());
-      onEnd(value, getSize());
+      console.log(value);
+      onChange({
+        ...text,
+        content: value,
+        width: shapeNode.width(),
+        height: shapeNode.height(),
+      });
     };
-  }, [value]);
+  }, [value, shapeNode]);
 
   function onResize(e: OnResizeEvent) {
-    // console.log(e);
     size = [e.CR.width / scale[0], size[1]];
-    console.log("width", size[0]);
-    shapeNode.width(size[0]);
-    // setSizeState(size);
-    // setSize((state) => [e.CR.width / scale[0], state[1]]);
+    shapeNode.width(e.CR.width / scale[0]);
+    shapeNode.height(e.CR.height / scale[1]);
+
+    // onChange({ ...text, width: size[0] });
   }
+
   useResizeObserver({
     node: textarea,
     onResize,
@@ -77,37 +83,32 @@ const TextEditor = ({
   return (
     <textarea
       ref={textAreaRef}
-      rows={textareaheight}
-      className="absolute border-none [box-sizing:content-box] m-0 bg-white overflow-hidden bg-none outline-none resize-none h-auto border border-border "
+      rows={textareaRows}
+      className="absolute border-none [box-sizing:content-box] m-0 bg-white overflow-hidden whitespace-pre bg-none outline-none resize-none h-auto border border-border "
       onKeyDown={(e) => {
         if (textarea) {
-          // hide on enter
-          // but don't hide on shift + enter
           if (e.code === "Enter" && !e.shiftKey) {
             removeTextarea();
           }
-          // on esc do not set value back to node
           if (e.code === "Escape") {
             removeTextarea();
           }
-          textarea.scrollTo({ left: 0, top: 0 });
         }
       }}
       onKeyUp={() => {
         if (textarea) {
           const rows = (value.match(/\n/g) || []).length + 1 || 1;
-          setTextareaheight(rows);
+          setTextareaRows(rows);
+          console.log("key");
           size = [size[0], rows * (shapeNode.fontSize() + 10)];
-          // setSizeState(size);
           shapeNode.height(size[1]);
-          textarea.scrollTo({ left: 0, top: 0 });
         }
       }}
       style={{
         left: areaPosition.x - 4 + "px",
         top: areaPosition.y - 1 - 4 + "px",
-        height: "auto",
         width: shapeNode.width() * scale[0] + "px",
+        height: "auto",
         padding: 4 + "px",
         fontSize: shapeNode.fontSize() * scale[0] + "px",
         lineHeight: shapeNode.lineHeight(),
@@ -116,7 +117,6 @@ const TextEditor = ({
         // @ts-expect-error TextNode.align() return type is given trubbles
         textAlign: shapeNode.align() || "start",
         color: shapeNode.fill(),
-        whiteSpace: "pre",
         overflowWrap: "normal",
         transform,
       }}
