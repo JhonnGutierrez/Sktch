@@ -29,8 +29,6 @@ const TextEditor = ({
   const [value, setValue] = useState(shapeNode.text());
   const [textareaRows, setTextareaRows] = useState(1);
 
-  let size: [number, number] = [shapeNode.width(), shapeNode.height()];
-
   const textarea = textAreaRef.current;
 
   useEffect(() => {
@@ -68,11 +66,8 @@ const TextEditor = ({
   }, [value, shapeNode]);
 
   function onResize(e: OnResizeEvent) {
-    size = [e.CR.width / scale[0], size[1]];
     shapeNode.width(e.CR.width / scale[0]);
     shapeNode.height(e.CR.height / scale[1]);
-
-    // onChange({ ...text, width: size[0] });
   }
 
   useResizeObserver({
@@ -100,8 +95,7 @@ const TextEditor = ({
           const rows = (value.match(/\n/g) || []).length + 1 || 1;
           setTextareaRows(rows);
           console.log("key");
-          size = [size[0], rows * (shapeNode.fontSize() + 10)];
-          shapeNode.height(size[1]);
+          shapeNode.height(rows * (shapeNode.fontSize() + 10));
         }
       }}
       style={{
