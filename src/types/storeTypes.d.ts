@@ -19,8 +19,8 @@ export type ImageItem = {
 export type TextItem = {
   type: "text";
   content: string;
-  fontFamily?: string;
-  fontSize?: number;
+  fontFamily: string;
+  fontSize: number;
 } & NodeItem;
 
 export type Item = ImageItem | TextItem;

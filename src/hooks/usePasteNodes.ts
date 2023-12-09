@@ -35,6 +35,8 @@ export default function usePasteNodes() {
             y: 100,
             width: 200,
             content: textContent,
+            fontFamily: "Roboto",
+            fontSize: 20,
           });
         }
       } else {

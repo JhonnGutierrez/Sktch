@@ -14,11 +14,11 @@ import {
 import { cn } from "@/lib/utils";
 import { CaretUpDown, Check } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // import { ScrollArea } from "../ui/scroll-area";
 import { Item } from "@/types/storeTypes";
-// import { useVirtualizer } from "@tanstack/react-virtual";
-import { FixedSizeList as List } from "react-window";
+import { useVirtualizer } from "@tanstack/react-virtual";
+import WebFont from "webfontloader";
 
 type FontItem = {
   family: string;
@@ -39,9 +39,11 @@ type Props = {
 
 const SelectFont = ({ selectedId, updateItem, selectedItem }: Props) => {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("0");
-  const [searchValue, setSearchValue] = useState("");
+  const [reloadVirtualize, setReloadVirtualize] = useState(false);
+  const [value, setValue] = useState<string | null>(null);
+  // const [searchValue, setSearchValue] = useState("");
 
+  const parentRef = useRef(null);
   const { isPending, error, data } = useQuery<{
     kind: "string";
     items: FontItem[];
@@ -55,21 +57,17 @@ const SelectFont = ({ selectedId, updateItem, selectedItem }: Props) => {
       ).then((res) => res.json()),
   });
 
-  // useEffect(() => {
-  //   if (!isPending) {
-  //     console.log(data);
-  //   } else {
-  //     console.log("loading...");
-  //   }
-  // }, [isPending, data]);
+  useEffect(() => {
+    const selectedItemFont =
+      selectedItem?.type === "text" && selectedItem.fontFamily;
 
-  // const parentRef = useRef(null);
-
-  // const rowVirtualizer = useVirtualizer({
-  //   count: 1589,
-  //   getScrollElement: () => parentRef.current,
-  //   estimateSize: () => 32,
-  // });
+    if (data) {
+      const selectedItemFontIndex = data.items.findIndex(
+        (i) => i.family === selectedItemFont,
+      );
+      setValue(selectedItemFontIndex + "");
+    }
+  }, [selectedItem, data]);
 
   const Row = ({
     index,
@@ -80,20 +78,26 @@ const SelectFont = ({ selectedId, updateItem, selectedItem }: Props) => {
     style: React.CSSProperties;
     data: FontItem[];
   }) => {
+    const fontFamily = data[index].family;
     return (
       <CommandItem
         style={style}
         // key={index}
         value={index + ""}
         onSelect={(currentValue) => {
-          console.log(currentValue);
           const newValue = currentValue === value ? "0" : currentValue;
+          const fontFamily = data[index].family;
           setValue(newValue);
           if (selectedItem?.type === "text" && selectedId) {
+            WebFont.load({
+              google: {
+                families: [fontFamily],
+              },
+            });
             updateItem(
               {
                 ...selectedItem,
-                fontFamily: data[index].family,
+                fontFamily: fontFamily,
               },
               selectedId,
             );
@@ -106,22 +110,39 @@ const SelectFont = ({ selectedId, updateItem, selectedItem }: Props) => {
         <Check
           className={cn(
             "mr-2 h-4 w-4",
-            value === data[index].family ? "opacity-100" : "opacity-0",
+            value === fontFamily ? "opacity-100" : "opacity-0",
           )}
         />
-        {data[index].family}
+        <span className="overflow-ellipsis w-full whitespace-nowrap overflow-x-hidden">
+          {fontFamily}
+        </span>
       </CommandItem>
     );
   };
 
-  const filteredData = data
-    ? data.items.filter((item) =>
-        item.family
-          .toLowerCase()
-          .trim()
-          .includes(searchValue.toLowerCase().trim()),
-      )
-    : [];
+  useEffect(() => {
+    // setReloadVirtualize((state) => !state);
+    if (parentRef.current) {
+      setTimeout(() => setReloadVirtualize((state) => !state), 150);
+    } else {
+      setTimeout(() => setReloadVirtualize((state) => !state), 250);
+    }
+  }, [open, data, parentRef]);
+
+  // const filteredData = data
+  //   ? data.items.filter((item) =>
+  //       item.family
+  //         .toLowerCase()
+  //         .trim()
+  //         .includes(searchValue.toLowerCase().trim()),
+  //     )
+  //   : [];
+
+  const rowVirtualizer = useVirtualizer({
+    count: data && !isPending ? data.items.length : 0,
+    getScrollElement: () => (reloadVirtualize ? parentRef.current : null),
+    estimateSize: () => 32,
+  });
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -130,10 +151,10 @@ const SelectFont = ({ selectedId, updateItem, selectedItem }: Props) => {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          disabled={isPending}
+          disabled={isPending && !value}
           className="w-[200px] justify-between capitalize"
         >
-          {data ? data.items[Number(value)].family : "loading..."}
+          {data && value ? data.items[Number(value)].family : "loading..."}
           {/* {value} */}
           <CaretUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -144,27 +165,51 @@ const SelectFont = ({ selectedId, updateItem, selectedItem }: Props) => {
             <>
               <CommandInput
                 placeholder="Search framework..."
-                onValueChange={(v) => setSearchValue(v)}
-                value={searchValue}
+                onValueChange={(v) => {
+                  const valueIndex = data.items.findIndex((i) =>
+                    i.family
+                      .toLowerCase()
+                      .trim()
+                      .includes(v.toLowerCase().trim()),
+                  );
+                  rowVirtualizer.scrollToIndex(valueIndex, { align: "start" });
+                }}
+                // value={searchValue}
               />
               <CommandEmpty>No font found.</CommandEmpty>
-              <CommandGroup>
-                {/* <ScrollArea asChild> */}
-                {/* <div> */}
-                <List
-                  height={250}
-                  itemCount={filteredData.length}
-                  itemSize={32}
-                  width={200}
-                  itemData={filteredData}
-                  onScroll={(e) => console.log(e)}
-                  itemKey={(index, data) => data[index].family}
+              {/* <ScrollArea asChild> */}
+              <div
+                ref={parentRef}
+                style={{
+                  height: 250 + "px",
+                  overflow: "auto",
+                }}
+              >
+                <CommandGroup
+                  style={{
+                    height: `${rowVirtualizer.getTotalSize()}px`,
+                    width: "100%",
+                    position: "relative",
+                  }}
                 >
-                  {Row}
-                </List>
-                {/* </div> */}
-                {/* </ScrollArea> */}
-              </CommandGroup>
+                  {rowVirtualizer.getVirtualItems().map((virtualItem) => (
+                    <Row
+                      key={virtualItem.key}
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: `${virtualItem.size}px`,
+                        transform: `translateY(${virtualItem.start}px)`,
+                      }}
+                      index={virtualItem.index}
+                      data={data.items}
+                    />
+                  ))}
+                </CommandGroup>
+              </div>
+              {/* </ScrollArea> */}
             </>
           )}
           {isPending && <CommandEmpty>Loading...</CommandEmpty>}

@@ -19,7 +19,7 @@ const AddText = () => {
       x: 100,
       y: 100,
       fontSize: 20,
-      fontFamily: "Arial",
+      fontFamily: "Roboto",
       width: undefined,
       height: undefined,
       content: "",

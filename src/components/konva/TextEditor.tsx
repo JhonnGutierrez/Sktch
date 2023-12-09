@@ -55,9 +55,9 @@ const TextEditor = ({
 
   useEffect(() => {
     return () => {
-      console.log(value);
       onChange({
         ...text,
+        fontFamily: shapeNode.fontFamily(),
         content: value,
         width: shapeNode.width(),
         height: shapeNode.height(),
@@ -94,7 +94,6 @@ const TextEditor = ({
         if (textarea) {
           const rows = (value.match(/\n/g) || []).length + 1 || 1;
           setTextareaRows(rows);
-          console.log("key");
           shapeNode.height(rows * (shapeNode.fontSize() + 10));
         }
       }}

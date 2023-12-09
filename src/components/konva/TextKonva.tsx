@@ -30,7 +30,11 @@ const TextKonva = ({ text, onChange }: Props) => {
 
   useEffect(() => {
     if (shapeRef.current) {
-      const { width } = getTextSizes(20, "Arial", text.content);
+      const { width } = getTextSizes(
+        20,
+        shapeRef.current.fontFamily(),
+        text.content,
+      );
 
       const rows = (shapeRef.current.text().match(/\n/g) || []).length + 1 || 1;
       const height = rows * shapeRef.current.fontSize();
@@ -62,7 +66,7 @@ const TextKonva = ({ text, onChange }: Props) => {
         width={text.width}
         height={text.height}
         rotation={text.rotation || 0}
-        fontSize={(text.fontSize || 20) / canvasScale[0]}
+        fontSize={text.fontSize / canvasScale[0]}
         fontFamily={text.fontFamily}
         draggable={true}
         wrap="none"

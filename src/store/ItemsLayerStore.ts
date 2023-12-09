@@ -40,7 +40,6 @@ export const useItemsLayerStore = create<ItemsLayerStore>()((set) => ({
         history = history.concat([itemsCopy]);
         historyStep += 1;
       }
-
       return { items: itemsCopy };
     });
   },

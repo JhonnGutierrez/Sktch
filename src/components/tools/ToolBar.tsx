@@ -22,7 +22,7 @@ const ToolBar = () => {
     } else {
       setSelectedItem(undefined);
     }
-  }, [selectedId]);
+  }, [selectedId, items]);
 
   return (
     <section
