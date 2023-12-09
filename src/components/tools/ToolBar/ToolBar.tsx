@@ -1,20 +1,21 @@
-import SelectFont from "./SelectFont";
 import { cn } from "@/lib/utils";
 import { useSelectedStore } from "@/store/SelectedStore";
-import { useItemsLayerStore } from "@/store/ItemsLayerStore";
 import { useEffect, useState } from "react";
 import { Item } from "@/types/storeTypes";
 import { useConfigStore } from "@/store/ConfigStore";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { Card } from "../ui/card";
-import { Button } from "../ui/button";
+import { Tabs, TabsList, TabsTrigger } from "../../ui/tabs";
+import { Card } from "../../ui/card";
+import { Button } from "../../ui/button";
 import { CaretLeft } from "@phosphor-icons/react";
+import LayerTab from "./LayerTab";
+import NodeTab from "./NodeTab";
+import { useItemsLayerStore } from "@/store/ItemsLayerStore";
 
 const ToolBar = () => {
   const { selectedId, setSelected } = useSelectedStore();
-  const { items, updateItem } = useItemsLayerStore();
   const [selectedItem, setSelectedItem] = useState<Item | undefined>();
   const { showLayers, setShowLayers } = useConfigStore();
+  const { items } = useItemsLayerStore();
 
   useEffect(() => {
     if (selectedId) {
@@ -84,21 +85,8 @@ const ToolBar = () => {
                 Node
               </TabsTrigger>
             </TabsList>
-            <TabsContent value="layers" className="px-3 py-2">
-              {/* <Card className="h-full  rounded-md"> */}
-              <p>Layers</p>
-              {/* </Card> */}
-            </TabsContent>
-            <TabsContent value="node" className="px-3 py-2">
-              {/* <Card className="h-full  rounded-md"> */}
-              {selectedItem && <p>{selectedItem.type}</p>}
-              <SelectFont
-                selectedId={selectedId}
-                updateItem={updateItem}
-                selectedItem={selectedItem}
-              />
-              {/* </Card> */}
-            </TabsContent>
+            <LayerTab />
+            <NodeTab />
           </Tabs>
         </Card>
       </div>

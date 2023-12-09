@@ -1,7 +1,7 @@
 import StageKonva from "./components/konva/StageKonva";
 import Aside from "./components/tools/Aside";
 import Header from "./components/tools/Header";
-import ToolBar from "./components/tools/ToolBar";
+import ToolBar from "./components/tools/ToolBar/ToolBar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
