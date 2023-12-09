@@ -46,7 +46,7 @@ const StageKonva = () => {
   return (
     <div
       ref={containerRef}
-      className="overflow-hidden aspect-[6/4] w-full h-[calc(100vh-5rem)] relative rounded-md"
+      className="overflow-hidden aspect-[6/4] h-[calc(100vh-4rem)] max-h-full min-w-full  relative rounded-md"
     >
       <Stage
         width={canvasDimensions[0]}

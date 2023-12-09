@@ -12,6 +12,7 @@ export const Undo = () => {
       Icon={ArrowUUpLeft}
       tooltip="Undo"
       side="right"
+      sideOffset={6}
     />
   );
 };
@@ -26,6 +27,7 @@ export const Redo = () => {
       Icon={ArrowUUpRight}
       tooltip="Redo"
       side="right"
+      sideOffset={6}
     />
   );
 };

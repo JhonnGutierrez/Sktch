@@ -56,7 +56,7 @@ const ImportImage = () => {
             />
           </Button>
         </TooltipTrigger>
-        <TooltipContent side="bottom" sideOffset={6}>
+        <TooltipContent side="right" sideOffset={6}>
           <p>Import image</p>
         </TooltipContent>
       </Tooltip>

@@ -3,13 +3,12 @@ import {
   User,
   Gear,
   PaintBrush,
-  Cards,
   Magnet,
   CaretLeft,
   CaretRight,
 } from "@phosphor-icons/react";
 import DownloadPage from "./DownloadPage";
-import ImportImage from "./ImportImage";
+import SeeLayers from "./SeeLayers";
 
 const Header = () => {
   return (
@@ -25,10 +24,9 @@ const Header = () => {
       </div>
       <div className="space-x-3 ml-auto">
         <DownloadPage />
-        <ImportImage />
         <IconButton Icon={PaintBrush} />
-        <IconButton Icon={Cards} />
         {/* StackSimple */}
+        <SeeLayers />
         <IconButton Icon={Magnet} />
         {/* Asterisk */}
         {/* Books */}
