@@ -3,7 +3,7 @@ import { create } from "zustand";
 
 type useSelectedStore = {
   selectedId: Item["id"] | null;
-  setSelected: (id: Item["id"]) => void;
+  setSelected: (id: Item["id"] | null) => void;
   clearSelected: () => void;
 };
 

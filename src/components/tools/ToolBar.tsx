@@ -11,10 +11,10 @@ import { Button } from "../ui/button";
 import { CaretLeft } from "@phosphor-icons/react";
 
 const ToolBar = () => {
-  const selectedId = useSelectedStore((state) => state.selectedId);
+  const { selectedId, setSelected } = useSelectedStore();
   const { items, updateItem } = useItemsLayerStore();
   const [selectedItem, setSelectedItem] = useState<Item | undefined>();
-  const { showLayers, toogleShowLayeres } = useConfigStore();
+  const { showLayers, setShowLayers } = useConfigStore();
 
   useEffect(() => {
     if (selectedId) {
@@ -34,7 +34,14 @@ const ToolBar = () => {
       <Button
         variant={"ghost"}
         className="absolute my-auto -left-11 top-[calc(50%-36px)] cursor-pointer"
-        onClick={toogleShowLayeres}
+        onClick={() => {
+          if (selectedId || showLayers) {
+            setShowLayers(false);
+            setSelected(null);
+          } else {
+            setShowLayers(true);
+          }
+        }}
         size={"icon"}
       >
         <div

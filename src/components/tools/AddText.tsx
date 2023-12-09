@@ -22,7 +22,7 @@ const AddText = () => {
       fontFamily: "Roboto",
       width: undefined,
       height: undefined,
-      content: "",
+      content: "Double tap to edit...",
     });
 
     setSelected(items[items.length - 1].id);
