@@ -10,8 +10,9 @@ export default function usePasteNodes() {
 
   useEffect(() => {
     const handlePaste = async () => {
+      console.log(await navigator.clipboard.read());
       const data = await navigator.clipboard.read();
-
+      console.log(data);
       if (data[0].types.includes("image/png")) {
         const blob = await data[0].getType("image/png");
         const imageUrl = URL.createObjectURL(blob);
@@ -22,6 +23,7 @@ export default function usePasteNodes() {
           y: 100,
           width: undefined,
           height: undefined,
+          blendMode: "source-over",
           src: imageUrl,
         });
       } else if (data[0].types.includes("text/plain")) {
@@ -37,6 +39,7 @@ export default function usePasteNodes() {
             content: textContent,
             fontFamily: "Roboto",
             fontSize: 20,
+            blendMode: "source-over",
           });
         }
       } else {

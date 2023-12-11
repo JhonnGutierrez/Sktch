@@ -68,6 +68,8 @@ const TextKonva = ({ text, onChange }: Props) => {
         rotation={text.rotation || 0}
         fontSize={text.fontSize / canvasScale[0]}
         fontFamily={text.fontFamily}
+        globalCompositeOperation={text.blendMode}
+        fontVariant="700 italic"
         draggable={true}
         wrap="none"
         // fill="#f00"

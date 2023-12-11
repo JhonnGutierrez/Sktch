@@ -22,6 +22,7 @@ const AddText = () => {
       fontFamily: "Roboto",
       width: undefined,
       height: undefined,
+      blendMode: "source-over",
       content: "Double tap to edit...",
     });
 

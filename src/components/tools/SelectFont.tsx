@@ -41,7 +41,6 @@ const SelectFont = ({ selectedId, updateItem, selectedItem }: Props) => {
   const [open, setOpen] = useState(false);
   const [reloadVirtualize, setReloadVirtualize] = useState(false);
   const [value, setValue] = useState<string | null>(null);
-  // const [searchValue, setSearchValue] = useState("");
 
   const parentRef = useRef(null);
   const { isPending, error, data } = useQuery<{
@@ -121,26 +120,16 @@ const SelectFont = ({ selectedId, updateItem, selectedItem }: Props) => {
   };
 
   useEffect(() => {
-    // setReloadVirtualize((state) => !state);
     if (parentRef.current) {
       setTimeout(() => setReloadVirtualize((state) => !state), 150);
     } else {
-      setTimeout(() => setReloadVirtualize((state) => !state), 250);
+      setTimeout(() => setReloadVirtualize((state) => !state), 500);
     }
   }, [open, data, parentRef]);
 
-  // const filteredData = data
-  //   ? data.items.filter((item) =>
-  //       item.family
-  //         .toLowerCase()
-  //         .trim()
-  //         .includes(searchValue.toLowerCase().trim()),
-  //     )
-  //   : [];
-
   const rowVirtualizer = useVirtualizer({
     count: data && !isPending ? data.items.length : 0,
-    getScrollElement: () => (reloadVirtualize ? parentRef.current : null),
+    getScrollElement: () => (reloadVirtualize || true) && parentRef.current,
     estimateSize: () => 32,
   });
 

@@ -85,6 +85,7 @@ const ToolBar = () => {
                 Node
               </TabsTrigger>
             </TabsList>
+            {/* Content */}
             <LayerTab />
             <NodeTab />
           </Tabs>

@@ -25,6 +25,7 @@ const ImportImage = () => {
         y: 0,
         width: undefined,
         height: undefined,
+        blendMode: "source-over",
         src: imageUrl,
       });
 

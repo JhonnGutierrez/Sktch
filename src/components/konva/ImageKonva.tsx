@@ -56,6 +56,7 @@ const ImageKonva = ({
         width={image.width || 0}
         height={image.height || 0}
         rotation={image.rotation || 0}
+        globalCompositeOperation={image.blendMode}
         onDblClick={onSelect}
         onDblTap={onSelect}
         ref={shapeRef}

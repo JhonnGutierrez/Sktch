@@ -58,6 +58,8 @@ const TextEditor = ({
       onChange({
         ...text,
         fontFamily: shapeNode.fontFamily(),
+        // @ts-expect-error blendMode types
+        blendMode: shapeNode.globalCompositeOperation(),
         content: value,
         width: shapeNode.width(),
         height: shapeNode.height(),
